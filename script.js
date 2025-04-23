@@ -77,32 +77,32 @@
 
 // BONUS 5
 
-const hamburger = {
-    name: "Cheese Burger",
-    weight: 250,
-    maker: {
-        name: "Anonymous Chef",
-        restaurant: {
-            name: "Hyur's Burgers",
-            address: "Main Street, 123",
-            isOpen: true,
-        },
-        age: 29
-    }
-};
+// const hamburger = {
+//     name: "Cheese Burger",
+//     weight: 250,
+//     maker: {
+//         name: "Anonymous Chef",
+//         restaurant: {
+//             name: "Hyur's Burgers",
+//             address: "Main Street, 123",
+//             isOpen: true,
+//         },
+//         age: 29
+//     }
+// };
 
-const newRestaurant = { ...hamburger.maker.restaurant };
-newRestaurant.name = "Hyur's II";
-newRestaurant.address = "Second Street, 12";
-const secondBurger = { ...hamburger };
-secondBurger.maker.restaurant = newRestaurant;
-secondBurger.maker.name = "Chef Hyur";
+// const newRestaurant = { ...hamburger.maker.restaurant };
+// newRestaurant.name = "Hyur's II";
+// newRestaurant.address = "Second Street, 12";
+// const secondBurger = { ...hamburger };
+// secondBurger.maker.restaurant = newRestaurant;
+// secondBurger.maker.name = "Chef Hyur";
 
-console.log(hamburger.maker.name); //  "Chef Hyur" viene modificato indirettamente da secondBurger
-console.log(secondBurger.maker.name); // "Chef Hyur"
+// console.log(hamburger.maker.name); //  "Chef Hyur" viene modificato indirettamente da secondBurger
+// console.log(secondBurger.maker.name); // "Chef Hyur"
 
-console.log(hamburger.maker.restaurant.name); // "Hyur's Burgers" non viene sovrascritto (hamburger ha ancora il vecchio riferimento)
-console.log(secondBurger.maker.restaurant.name); // "Hyur's II" userà newRestaurant
+// console.log(hamburger.maker.restaurant.name); // "Hyur's Burgers" non viene sovrascritto (hamburger ha ancora il vecchio riferimento)
+// console.log(secondBurger.maker.restaurant.name); // "Hyur's II" userà newRestaurant
 
 // Oggetti in memoria:
 
@@ -111,3 +111,100 @@ console.log(secondBurger.maker.restaurant.name); // "Hyur's II" userà newRestau
 // hamburger.maker.restaurant – 1 oggetto
 // newRestaurant – 1 oggetto (clone shallow)
 // secondBurger – 1 oggetto (shallow clone con maker condiviso)
+
+
+// SNACK 6
+
+// const chef = {
+//     name: "Chef Hyur",
+//     age: 29,
+//     makeBurger: (num = 1) => {
+//         console.log(`Ecco ${num} hamburger per te!`);
+//     },
+//     restaurant: {
+//         name: "Hyur's Burgers",
+//         welcomeClient: () => {
+//             console.log("Benvenuto!");
+//         },
+//         address: {
+//             street: 'Main Street',
+//             number: 123,
+//             showAddress: () => {
+//                 console.log("Main Street 123");
+//             }
+//         },
+//         isOpen: true,
+//     }
+// }
+
+// Im metodfo miglior per una clonazione profonda è usare una libreria come lodash.
+// Clona profondamente ogni livello dell'oggetto, mantiene le funzioni e evita i riferimenti condivisi tra oggetto
+// originale e clone
+
+
+// EXTRA-BONUS 
+
+function deepClone(obj) {
+    if (obj === null || typeof obj !== 'object') {
+        // Se obj è null o un tipo primitivo (string, number, boolean, function), restituiscilo direttamente
+        return obj;
+    }
+
+    if (obj instanceof Date) {
+        // Copia speciale per oggetti Date
+        return new Date(obj);
+    }
+
+    if (Array.isArray(obj)) {
+        // Se è un array, crea un nuovo array ricorsivamente
+        return obj.map(item => deepClone(item));
+    }
+
+    // È un oggetto normale: clona ogni proprietà
+    const clone = {};
+
+    for (const key in obj) {
+        if (obj.hasOwnProperty(key)) {
+            clone[key] = deepClone(obj[key]);
+        }
+    }
+
+    return clone;
+}
+
+// Test con l'oggetto chef
+const chef = {
+    name: "Chef Hyur",
+    age: 29,
+    makeBurger: (num = 1) => {
+        console.log(`Ecco ${num} hamburger per te!`);
+    },
+    restaurant: {
+        name: "Hyur's Burgers",
+        welcomeClient: () => {
+            console.log("Benvenuto!");
+        },
+        address: {
+            street: 'Main Street',
+            number: 123,
+            showAddress: () => {
+                console.log("Main Street 123");
+            }
+        },
+        isOpen: true,
+    }
+};
+
+// Clona chef
+const clonedChef = deepClone(chef);
+
+// Testing
+clonedChef.name = "New Chef";
+clonedChef.restaurant.name = "New Restaurant";
+
+clonedChef.makeBurger(2);
+clonedChef.restaurant.welcomeClient();
+clonedChef.restaurant.address.showAddress();
+
+console.log(chef.name);
+console.log(chef.restaurant.name); 
