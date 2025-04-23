@@ -5,10 +5,10 @@
 // secondBurger.name = 'Double Cheese Burger';
 // secondBurger.weight = 500;
 
-// console.log(hamburger.name); // ?
-// console.log(secondBurger.name); // ?
+// console.log(hamburger.name); // "Double Cheese Burger"
+// console.log(secondBurger.name); // "Double Cheese Burger"
 
-// In entrambi i log appare "Double Cheese Burger"
+// E' stato creato 1 solo oggetto
 
 
 // SNACK 2
@@ -22,10 +22,10 @@
 // const secondBurger = { ...hamburger };
 // secondBurger.ingredients[0] = "Salad";
 
-// console.log(hamburger.ingredients[0]); // ?
-// console.log(secondBurger.ingredients[0]); // ?
+// console.log(hamburger.ingredients[0]); // "Salad"
+// console.log(secondBurger.ingredients[0]); // "Salad"
 
-// In entrambi i log appare "Salad"
+// Sono stati creati 2 oggetti
 
 
 //  SNACK 3
@@ -60,7 +60,9 @@
 //     },
 // }
 
-//  Con chef il metodo migliore è { ...chef } , non è necessarioo il deep clone
+//  Con chef il metodo migliore è { ...chef } , non è necessario il deep clone
+// const chefCopia = {...chef};
+// console.log(chefCopia)
 
 // const restaurant = {
 //     name: "Hyur's Burgers",
@@ -73,6 +75,8 @@
 // };
 
 //  Con resturant uso structuredClone() perchè abbiamo oggetti annidati e Date,  qui il deep clone ci vuole
+// const resturantCopy = structuredClone(resturant);
+// console.log(resturantCopy);
 
 
 // BONUS 5
@@ -90,11 +94,17 @@
 //         age: 29
 //     }
 // };
+// 3 oggetti
 
 // const newRestaurant = { ...hamburger.maker.restaurant };
+// 4° oggetto
+
 // newRestaurant.name = "Hyur's II";
 // newRestaurant.address = "Second Street, 12";
+
 // const secondBurger = { ...hamburger };
+// 5° oggetto
+
 // secondBurger.maker.restaurant = newRestaurant;
 // secondBurger.maker.name = "Chef Hyur";
 
@@ -111,9 +121,10 @@
 // hamburger.maker.restaurant – 1 oggetto
 // newRestaurant – 1 oggetto (clone shallow)
 // secondBurger – 1 oggetto (shallow clone con maker condiviso)
+// Totale oggetti = 5
 
 
-// SNACK 6
+// BONUS 6
 
 // const chef = {
 //     name: "Chef Hyur",
@@ -138,11 +149,23 @@
 // }
 
 // Il metodo migliore per una clonazione profonda è usare una libreria come lodash (npm install lodash).
-// Clona profondamente ogni livello dell'oggetto, mantiene le funzioni e evita i riferimenti condivisi tra oggetto
-// originale e clone
+// Clona profondamente ogni livello dell'oggetto, mantiene le funzioni e evita i riferimenti condivisi tra oggetto originale e clone
+
+// In alternativa per copiare in maniere deep:
+// const chefCopy = {
+//     ...chef,
+//     resturant:{
+//         ...chef.resturant,
+//         address: {
+//             ...chef.resturant.address
+//         }
+//     }
+// }
+
+// console.log(chefCopy);
 
 
-// EXTRA-BONUS 
+// BONUS 7
 
 // Funzione ricorsiva per effettuare una copia profonda (deep copy) di un oggetto
 function deepClone(obj) {
