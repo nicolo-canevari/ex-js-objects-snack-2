@@ -137,53 +137,61 @@
 //     }
 // }
 
-// Im metodfo miglior per una clonazione profonda è usare una libreria come lodash.
+// Il metodo migliore per una clonazione profonda è usare una libreria come lodash (npm install lodash).
 // Clona profondamente ogni livello dell'oggetto, mantiene le funzioni e evita i riferimenti condivisi tra oggetto
 // originale e clone
 
 
 // EXTRA-BONUS 
 
+// Funzione ricorsiva per effettuare una copia profonda (deep copy) di un oggetto
 function deepClone(obj) {
+
+    // Se obj è null o un tipo primitivo (string, number, boolean, function), lo restituisce immediatamente
     if (obj === null || typeof obj !== 'object') {
-        // Se obj è null o un tipo primitivo (string, number, boolean, function), restituiscilo direttamente
         return obj;
     }
 
+    // Gestione speciale per oggetti Date
     if (obj instanceof Date) {
-        // Copia speciale per oggetti Date
+        // Nuova istanza con la stessa data
         return new Date(obj);
     }
 
+    // Se è un array, crea un nuovo array e clona ricorsivamente ogni elemento
     if (Array.isArray(obj)) {
-        // Se è un array, crea un nuovo array ricorsivamente
         return obj.map(item => deepClone(item));
     }
 
-    // È un oggetto normale: clona ogni proprietà
+    // Crea un nuovo oggetto vuoto
     const clone = {};
 
+    // Ciclo su tutte le proprietà dell’oggetto (solo quelle proprie, non ereditate)
     for (const key in obj) {
         if (obj.hasOwnProperty(key)) {
             clone[key] = deepClone(obj[key]);
         }
     }
 
+    // Restituisce l’oggetto completamente copiato
     return clone;
 }
 
 // Test con l'oggetto chef
 const chef = {
-    name: "Chef Hyur",
-    age: 29,
+    name: "Chef Hyur",  // stringa primitiva
+    age: 29,   // numero primitivo
+    // funzione da mantenere
     makeBurger: (num = 1) => {
         console.log(`Ecco ${num} hamburger per te!`);
     },
+    // oggetto annidato
     restaurant: {
         name: "Hyur's Burgers",
         welcomeClient: () => {
             console.log("Benvenuto!");
         },
+        // oggetto annidato
         address: {
             street: 'Main Street',
             number: 123,
@@ -198,13 +206,20 @@ const chef = {
 // Clona chef
 const clonedChef = deepClone(chef);
 
-// Testing
+// Modifica i dati del clone per verificarne l’indipendenza
 clonedChef.name = "New Chef";
 clonedChef.restaurant.name = "New Restaurant";
 
+// Esegue i metodi per confermare che le funzioni sono ancora attive
 clonedChef.makeBurger(2);
 clonedChef.restaurant.welcomeClient();
 clonedChef.restaurant.address.showAddress();
 
+// Verifica che l’originale non sia stato modificato
 console.log(chef.name);
-console.log(chef.restaurant.name); 
+console.log(chef.restaurant.name);
+
+// Ricorsività vera (deep copy): si assicura che ogni proprietà venga compiata senza modificare l'oggetto originale
+// Supporta oggetti speciali come Date
+// Gli array vengono ricreati elemento per elemento usando map() e deepClone(), quindi anch’essi sono copiati a fondo.
+// Le funzioni vengono trattate come valori primitivi (non sono oggetti), quindi non vengono clonate ma semplicemente copiate.
